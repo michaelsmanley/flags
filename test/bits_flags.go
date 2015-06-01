@@ -9,13 +9,13 @@ import (
 	"errors"
 )
 
-// BitsList is a slice of Bits.
-type BitsList []Bits
+// BitsSlice is a slice of Bits.
+type BitsSlice []Bits
 
 // ErrMutex says that a result had more than one mutually exclusive bit set.
-var ErrMutex = errors.New("attempt to set mutually exclusive bits")
+var ErrMutex = errors.New("attempt to set mutually exclusive Bits")
 
-// Set turns a particular bit or set of bits on.
+// Set turns a particular bit or set of Bits on.
 func (f *Bits) Set(v Bits) (Bits, error) {
 	x := *f | v
 
@@ -28,7 +28,7 @@ func (f *Bits) Set(v Bits) (Bits, error) {
 	return *f, nil
 }
 
-// Unset turns a particular bit or set of bits off.
+// Unset turns a particular bit or set of Bits off.
 func (f *Bits) Unset(v Bits) (Bits, error) {
 	x := *f &^ v
 
@@ -41,21 +41,21 @@ func (f *Bits) Unset(v Bits) (Bits, error) {
 	return *f, nil
 }
 
-// IsEmpty is true if no bits are on.
+// IsEmpty is true if no Bits are on.
 func (f Bits) IsEmpty() bool {
 	return f == 0
 }
 
-// IsSet determines if a Flags has a particular bit or set of bits on.
+// IsSet determines if a Flags has a particular bit or set of Bits on.
 func (f Bits) IsSet(v Bits) bool {
 	return f&v != 0
 }
 
-// Unpack creates a BitsList from a single Bits, with each item in the list
+// Unpack creates a BitsSlice from a single Bits, with each item in the list
 // having only a single bit on.
-func (f Bits) Unpack() BitsList {
+func (f Bits) Unpack() BitsSlice {
 	var v Bits
-	fl := BitsList{}
+	fl := BitsSlice{}
 
 	for v = 1; v <= 1<<31; v <<= 1 {
 		if f.IsSet(v) {
@@ -69,8 +69,8 @@ func (f Bits) Unpack() BitsList {
 	return fl
 }
 
-// Pack packs a BitsList into a single Bits value.
-func (fl BitsList) Pack() (Bits, error) {
+// Pack packs a BitsSlice into a single Bits value.
+func (fl BitsSlice) Pack() (Bits, error) {
 	var f Bits
 	var err error
 
