@@ -15,26 +15,26 @@ var flags = &typewriter.Template{
 	func (f *{{.Type}}) Set(v {{.Type}}) ({{.Type}}, error) {
 		x := *f | v
 
-		x = x & MutuallyExclusive
-		if !x.IsEmpty() && !(x & (x - 1)).IsEmpty() {
+		y := x & MutuallyExclusive
+		if !y.IsEmpty() && !(y & (y - 1)).IsEmpty() {
 			return *f, ErrMutex
 		}
 
 		*f = x
-		return *f, nil
+		return x, nil
 	}
 
 	// Unset turns a particular bit or set of {{.Type}} off.
 	func (f *{{.Type}}) Unset(v {{.Type}}) ({{.Type}}, error) {
 		x := *f &^ v
 
-		x = x & MutuallyExclusive
-		if !x.IsEmpty() && !(x & (x - 1)).IsEmpty() {
+		y := x & MutuallyExclusive
+		if !y.IsEmpty() && !(y & (y - 1)).IsEmpty() {
 			return *f, ErrMutex
 		}
 
 		*f = x
-		return *f, nil
+		return x, nil
 	}
 
 	// IsEmpty is true if no {{.Type}} are on.

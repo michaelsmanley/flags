@@ -19,26 +19,26 @@ var ErrMutex = errors.New("attempt to set mutually exclusive Bits")
 func (f *Bits) Set(v Bits) (Bits, error) {
 	x := *f | v
 
-	x = x & MutuallyExclusive
-	if !x.IsEmpty() && !(x & (x - 1)).IsEmpty() {
+	y := x & MutuallyExclusive
+	if !y.IsEmpty() && !(y & (y - 1)).IsEmpty() {
 		return *f, ErrMutex
 	}
 
 	*f = x
-	return *f, nil
+	return x, nil
 }
 
 // Unset turns a particular bit or set of Bits off.
 func (f *Bits) Unset(v Bits) (Bits, error) {
 	x := *f &^ v
 
-	x = x & MutuallyExclusive
-	if !x.IsEmpty() && !(x & (x - 1)).IsEmpty() {
+	y := x & MutuallyExclusive
+	if !y.IsEmpty() && !(y & (y - 1)).IsEmpty() {
 		return *f, ErrMutex
 	}
 
 	*f = x
-	return *f, nil
+	return x, nil
 }
 
 // IsEmpty is true if no Bits are on.
