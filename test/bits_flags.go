@@ -15,7 +15,31 @@ type BitsSlice []Bits
 // ErrMutex says that a result had more than one mutually exclusive bit set.
 var ErrMutex = errors.New("attempt to set mutually exclusive Bits")
 
-// Set turns a particular bit or set of Bits on.
+// Punch turns a particular bit or set of Bits on.
+// If a bit that is part of a mutually exclusive set is
+// turned on, all of the other bits in that set will be
+// turned off. If multiple bits in the mutually exclusive
+// set are turned on, only the highest bit will remain on.
+func (f *Bits) Punch(v Bits) Bits {
+	var x Bits
+
+	s := v.Unpack()
+	for _, b := range s {
+		x = *f | b
+		y := x & MutuallyExclusive
+		if !y.IsEmpty() && !(y & (y - 1)).IsEmpty() {
+			z := x &^ MutuallyExclusive
+			x = z | b
+		}
+	}
+
+	*f = x
+	return x
+}
+
+// Set turns a particular bit or set of Bits on, and
+// returns ErrMutex if an attempt is made to turn mutually exclusive
+// bits on at the same time.
 func (f *Bits) Set(v Bits) (Bits, error) {
 	x := *f | v
 
@@ -31,11 +55,6 @@ func (f *Bits) Set(v Bits) (Bits, error) {
 // Unset turns a particular bit or set of Bits off.
 func (f *Bits) Unset(v Bits) (Bits, error) {
 	x := *f &^ v
-
-	y := x & MutuallyExclusive
-	if !y.IsEmpty() && !(y & (y - 1)).IsEmpty() {
-		return *f, ErrMutex
-	}
 
 	*f = x
 	return x, nil

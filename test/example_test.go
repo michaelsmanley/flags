@@ -113,3 +113,12 @@ func TestMutex(t *testing.T) {
 		So(err, ShouldEqual, ErrMutex)
 	})
 }
+
+func TestToggle(t *testing.T) {
+	var m Bits
+	m.Set(Bit01)
+	m = m.Punch(Bit02 | Bit03)
+	Convey("Bits toggle works.", t, func() {
+		So(m, ShouldEqual, Bit03)
+	})
+}
