@@ -114,7 +114,7 @@ func TestMutex(t *testing.T) {
 	})
 }
 
-func TestToggle(t *testing.T) {
+func TestPunch(t *testing.T) {
 	var m Bits
 	m.Set(Bit01)
 	m = m.Punch(Bit02 | Bit03)
