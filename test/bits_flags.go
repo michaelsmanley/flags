@@ -4,16 +4,16 @@
 
 package example
 
-import (
-	"encoding/json"
-	"errors"
-)
+import "errors"
 
 // BitsSlice is a slice of Bits.
 type BitsSlice []Bits
 
 // ErrMutex says that a result had more than one mutually exclusive bit set.
 var ErrMutex = errors.New("attempt to set mutually exclusive Bits")
+
+// ErrUnrecognized says that a string does not map to a value
+var ErrUnrecognized = errors.New("unrecognized string")
 
 // Punch turns a particular bit or set of Bits on.
 // If a bit that is part of a mutually exclusive set is
@@ -103,14 +103,14 @@ func (fl BitsSlice) Pack() (Bits, error) {
 	return f, nil
 }
 
-// Unstring turns the string representation of a Bits into a Bits value.
+// Unstring turns the string representation of a Flags into a Flags value.
 // This is meant to be used with constants that have had String() and
 // JSON Marshal/Unmarshal routines generated with stringer and jsonenums.
 func Unstring(s string) (Bits, error) {
 	var f Bits
-	err := json.Unmarshal([]byte("\""+s+"\""), &f)
-	if err != nil {
-		return 0, err
+	var ok bool
+	if f, ok = _BitsNameToValue[s]; !ok {
+		return 0, ErrUnrecognized
 	}
 	return f, nil
 }

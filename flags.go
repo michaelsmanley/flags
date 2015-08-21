@@ -11,6 +11,9 @@ var flags = &typewriter.Template{
 	// ErrMutex says that a result had more than one mutually exclusive bit set.
 	var ErrMutex = errors.New("attempt to set mutually exclusive {{.Type}}")
 
+	// ErrUnrecognized says that a string does not map to a value
+	var ErrUnrecognized = errors.New("unrecognized string")
+
 	// Punch turns a particular bit or set of {{.Type}} on.
 	// If a bit that is part of a mutually exclusive set is
 	// turned on, all of the other bits in that set will be
@@ -32,7 +35,6 @@ var flags = &typewriter.Template{
 		*f = x
 		return x
 	}
-
 
 	// Set turns a particular bit or set of {{.Type}} on, and
 	// returns ErrMutex if an attempt is made to turn mutually exclusive
@@ -100,14 +102,14 @@ var flags = &typewriter.Template{
 		return f, nil
 	}
 
-	// Unstring turns the string representation of a {{.Type}} into a {{.Type}} value.
+	// Unstring turns the string representation of a Flags into a Flags value.
 	// This is meant to be used with constants that have had String() and
 	// JSON Marshal/Unmarshal routines generated with stringer and jsonenums.
 	func Unstring(s string) ({{.Type}}, error) {
 		var f {{.Type}}
-		err := json.Unmarshal([]byte("\""+s+"\""), &f)
-		if err != nil {
-			return 0, err
+		var ok bool
+		if f, ok = _{{.Type}}NameToValue[s]; !ok {
+			return 0, ErrUnrecognized
 		}
 		return f, nil
 	}

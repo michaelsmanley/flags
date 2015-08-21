@@ -1,7 +1,7 @@
 package example
 
-//go:generate gen
 //go:generate jsonenums -type=Bits
+//go:generate gen
 
 // +gen stringer flags
 type Bits uint32
