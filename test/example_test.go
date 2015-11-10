@@ -57,6 +57,10 @@ func TestUnsetSingle(t *testing.T) {
 	Convey("Bits should not have Bit01 flag set.", t, func() {
 		So(m.IsSet(Bit01), ShouldEqual, false)
 	})
+
+	Convey("Bits should be empty.", t, func() {
+		So(m.IsEmpty(), ShouldEqual, true)
+	})
 }
 
 func TestUnsetMultple(t *testing.T) {

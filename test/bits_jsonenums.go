@@ -128,6 +128,7 @@ func init() {
 	}
 }
 
+// MarshalJSON is generated so Bits satisfies json.Marshaler.
 func (r Bits) MarshalJSON() ([]byte, error) {
 	if s, ok := interface{}(r).(fmt.Stringer); ok {
 		return json.Marshal(s.String())
@@ -139,6 +140,7 @@ func (r Bits) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s)
 }
 
+// UnmarshalJSON is generated so Bits satisfies json.Unmarshaler.
 func (r *Bits) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
